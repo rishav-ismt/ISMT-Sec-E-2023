@@ -28,7 +28,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".DashboardActivity"
+            android:name=".dashboard.DashboardActivity"
             android:exported="false" />
         <activity
             android:name=".LoginActivity"

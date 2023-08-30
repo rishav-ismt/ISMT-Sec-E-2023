@@ -5,6 +5,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import np.com.rishavchudal.ismt_sec_e.dashboard.DashboardActivity
 import np.com.rishavchudal.ismt_sec_e.home.HomeActivity
 
 class SplashActivity : AppCompatActivity() {

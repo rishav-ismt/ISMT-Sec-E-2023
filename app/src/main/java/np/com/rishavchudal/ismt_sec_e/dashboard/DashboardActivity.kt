@@ -1,8 +1,11 @@
-package np.com.rishavchudal.ismt_sec_e
+package np.com.rishavchudal.ismt_sec_e.dashboard
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import np.com.rishavchudal.ismt_sec_e.AppConstants
+import np.com.rishavchudal.ismt_sec_e.R
+import np.com.rishavchudal.ismt_sec_e.User
 
 class DashboardActivity : AppCompatActivity() {
     private val tag = "DashboardActivity"
