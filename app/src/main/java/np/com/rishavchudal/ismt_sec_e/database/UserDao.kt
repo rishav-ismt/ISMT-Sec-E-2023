@@ -1,4 +1,4 @@
-package np.com.rishavchudal.ismt_sec_e
+package np.com.rishavchudal.ismt_sec_e.database
 
 import androidx.room.Dao
 import androidx.room.Delete

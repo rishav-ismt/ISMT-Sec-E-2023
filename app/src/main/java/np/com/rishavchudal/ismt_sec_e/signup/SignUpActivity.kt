@@ -4,9 +4,8 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
-import np.com.rishavchudal.ismt_sec_e.R
-import np.com.rishavchudal.ismt_sec_e.TestDatabase
-import np.com.rishavchudal.ismt_sec_e.User
+import np.com.rishavchudal.ismt_sec_e.database.TestDatabase
+import np.com.rishavchudal.ismt_sec_e.database.User
 import np.com.rishavchudal.ismt_sec_e.databinding.ActivitySignUpBinding
 import np.com.rishavchudal.ismt_sec_e.home.HomeActivity
 import java.lang.Exception

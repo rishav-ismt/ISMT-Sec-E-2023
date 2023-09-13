@@ -1,4 +1,4 @@
-package np.com.rishavchudal.ismt_sec_e
+package np.com.rishavchudal.ismt_sec_e.database
 
 import android.os.Parcelable
 import androidx.room.ColumnInfo
