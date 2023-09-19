@@ -3,6 +3,7 @@ package np.com.rishavchudal.ismt_sec_e.dashboard
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import np.com.rishavchudal.ismt_sec_e.AppConstants
 import np.com.rishavchudal.ismt_sec_e.R
 import np.com.rishavchudal.ismt_sec_e.database.Product
 import np.com.rishavchudal.ismt_sec_e.database.TestDatabase
@@ -11,6 +12,8 @@ import java.lang.Exception
 
 class AddOrUpdateItemActivity : AppCompatActivity() {
     private lateinit var addOrUpdateItemBinding: ActivityAddOrUpdateItemBinding
+    private var receivedProduct: Product? = null
+    private var isForUpdate = false
 
     companion object {
         const val RESULT_CODE_COMPLETE = 1001
@@ -21,6 +24,15 @@ class AddOrUpdateItemActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         addOrUpdateItemBinding = ActivityAddOrUpdateItemBinding.inflate(layoutInflater)
         setContentView(addOrUpdateItemBinding.root)
+
+        receivedProduct = intent.getParcelableExtra<Product>(AppConstants.KEY_PRODUCT)
+        receivedProduct?.apply {
+            isForUpdate = true
+            addOrUpdateItemBinding.tieTitle.setText(this.title)
+            addOrUpdateItemBinding.tiePrice.setText(this.price)
+            addOrUpdateItemBinding.tieDescription.setText(this.description)
+            //TODO for image and location
+        }
 
         addOrUpdateItemBinding.ibBack.setOnClickListener {
             setResultWithFinish(RESULT_CODE_CANCEL)
@@ -44,21 +56,34 @@ class AddOrUpdateItemActivity : AppCompatActivity() {
                 ""
             )
 
+            if (isForUpdate) {
+                product.id = receivedProduct!!.id
+            }
+
             val testDatabase = TestDatabase.getInstance(applicationContext)
             val productDao = testDatabase.getProductDao()
 
             Thread {
                 try {
-                    productDao.insertNewProduct(product)
-                    runOnUiThread {
-                        clearFieldsData()
-                        showToast("Product added successfully...")
-                        setResultWithFinish(RESULT_CODE_COMPLETE)
+                    if (isForUpdate) {
+                        productDao.updateProduct(product)
+                        runOnUiThread {
+                            clearFieldsData()
+                            showToast("Product updated successfully...")
+                            setResultWithFinish(RESULT_CODE_COMPLETE)
+                        }
+                    } else {
+                        productDao.insertNewProduct(product)
+                        runOnUiThread {
+                            clearFieldsData()
+                            showToast("Product added successfully...")
+                            setResultWithFinish(RESULT_CODE_COMPLETE)
+                        }
                     }
                 } catch (exception: Exception) {
                     exception.printStackTrace()
                     runOnUiThread {
-                        showToast("Couldn't add product. Try again...")
+                        showToast("Couldn't add or update product. Try again...")
                     }
                 }
             }.start()

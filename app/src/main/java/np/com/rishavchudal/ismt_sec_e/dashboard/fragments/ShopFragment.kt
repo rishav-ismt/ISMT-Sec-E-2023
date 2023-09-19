@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.LinearLayoutManager
+import np.com.rishavchudal.ismt_sec_e.AppConstants
 import np.com.rishavchudal.ismt_sec_e.R
 import np.com.rishavchudal.ismt_sec_e.UiUtility
 import np.com.rishavchudal.ismt_sec_e.dashboard.AddOrUpdateItemActivity
@@ -101,6 +102,8 @@ class ShopFragment : Fragment(), ProductRecyclerAdapter.ProductAdapterListener {
 
     override fun onItemClicked(product: Product, position: Int) {
         val intent = Intent(requireActivity(), DetailViewActivity::class.java)
+        intent.putExtra(AppConstants.KEY_PRODUCT, product)
+        intent.putExtra(AppConstants.KEY_PRODUCT_POSITION, position)
         startDetailViewActivity.launch(intent)
     }
 }
