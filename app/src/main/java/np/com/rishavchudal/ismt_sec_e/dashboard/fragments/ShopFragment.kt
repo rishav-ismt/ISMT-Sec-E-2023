@@ -98,7 +98,11 @@ class ShopFragment : Fragment(), ProductRecyclerAdapter.ProductAdapterListener {
     }
 
     private fun populateRecyclerView(products: List<Product>) {
-        productRecyclerAdapter = ProductRecyclerAdapter(products, this)
+        productRecyclerAdapter = ProductRecyclerAdapter(
+            products,
+            this,
+            requireActivity().applicationContext
+        )
         shopBinding.rvShop.adapter = productRecyclerAdapter
         shopBinding.rvShop.layoutManager = LinearLayoutManager(requireActivity())
     }

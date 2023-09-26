@@ -16,6 +16,7 @@ import androidx.core.content.ContextCompat
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import np.com.rishavchudal.ismt_sec_e.AppConstants
 import np.com.rishavchudal.ismt_sec_e.BitmapScalar
+import np.com.rishavchudal.ismt_sec_e.MapsActivity
 import np.com.rishavchudal.ismt_sec_e.R
 import np.com.rishavchudal.ismt_sec_e.database.Product
 import np.com.rishavchudal.ismt_sec_e.database.TestDatabase
@@ -53,6 +54,11 @@ class AddOrUpdateItemActivity : AppCompatActivity() {
             imageUriPath = "";
             addOrUpdateItemBinding.ivAddImage.setImageResource(android.R.drawable.ic_menu_gallery);
         }
+    }
+
+    private val startMapActivityForResult = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()) {
+        //TODO Handle data
     }
 
     companion object {
@@ -100,6 +106,10 @@ class AddOrUpdateItemActivity : AppCompatActivity() {
             handleImageAddButtonClicked()
         }
 
+        addOrUpdateItemBinding.mbLocation.setOnClickListener {
+            startMapActivity()
+        }
+
         addOrUpdateItemBinding.mbSubmit.setOnClickListener {
             val title = addOrUpdateItemBinding.tieTitle.text.toString().trim()
             val price = addOrUpdateItemBinding.tiePrice.text.toString().trim()
@@ -114,7 +124,7 @@ class AddOrUpdateItemActivity : AppCompatActivity() {
                 title,
                 price,
                 description,
-                "",
+                imageUriPath,
                 ""
             )
 
@@ -256,6 +266,11 @@ class AddOrUpdateItemActivity : AppCompatActivity() {
     private fun setResultWithFinish(resultCode: Int) {
         setResult(resultCode)
         finish()
+    }
+
+    private fun startMapActivity() {
+        val intent = Intent(this, MapsActivity::class.java)
+        startMapActivityForResult.launch(intent)
     }
     override fun onBackPressed() {
         setResultWithFinish(RESULT_CODE_CANCEL)

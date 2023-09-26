@@ -14,5 +14,9 @@ data class User(
     val email: String,
     val password: String
 ): Parcelable {
-    constructor(fullName: String, email: String, password: String): this(0, fullName, email, password)
+    constructor(
+        fullName: String,
+        email: String,
+        password: String
+    ): this(0, fullName, email, password)
 }
