@@ -2,15 +2,22 @@ package np.com.rishavchudal.ismt_sec_e.dashboard
 
 import android.content.DialogInterface
 import android.content.Intent
+import android.graphics.Bitmap
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
 import androidx.activity.result.contract.ActivityResultContracts
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import np.com.rishavchudal.ismt_sec_e.AppConstants
+import np.com.rishavchudal.ismt_sec_e.BitmapScalar
 import np.com.rishavchudal.ismt_sec_e.R
 import np.com.rishavchudal.ismt_sec_e.UiUtility
 import np.com.rishavchudal.ismt_sec_e.database.Product
+import np.com.rishavchudal.ismt_sec_e.database.TestDatabase
 import np.com.rishavchudal.ismt_sec_e.databinding.ActivityDetailViewBinding
+import java.io.IOException
+import java.lang.Exception
 
 class DetailViewActivity : AppCompatActivity() {
     private lateinit var detailViewBinding: ActivityDetailViewBinding
@@ -26,6 +33,10 @@ class DetailViewActivity : AppCompatActivity() {
         } else {
             // TODO do nothing
         }
+    }
+
+    companion object {
+        const val RESULT_CODE_REFRESH = 2001
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,7 +57,24 @@ class DetailViewActivity : AppCompatActivity() {
             detailViewBinding.productTitle.text = this.title
             detailViewBinding.productPrice.text = this.price
             detailViewBinding.productDescription.text = this.description
-            //TODO populate image and location
+            detailViewBinding.productImage.post {
+                var bitmap: Bitmap?
+                try {
+                    bitmap = MediaStore.Images.Media.getBitmap(
+                        applicationContext.contentResolver,
+                        Uri.parse(product.image)
+                    )
+                    bitmap = BitmapScalar.stretchToFill(
+                        bitmap,
+                        detailViewBinding.productImage.width,
+                        detailViewBinding.productImage.height
+                    )
+                    detailViewBinding.productImage.setImageBitmap(bitmap)
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
+            }
+            //TODO populate location
         }
     }
 
@@ -82,7 +110,7 @@ class DetailViewActivity : AppCompatActivity() {
                     "Yes",
                     DialogInterface.OnClickListener {
                             dialogInterface,
-                            i -> UiUtility.showToast(this, "Yes Button Clicked...")
+                            i -> deleteProduct()
                     })
                 .setNegativeButton(
                     "No",
@@ -97,5 +125,38 @@ class DetailViewActivity : AppCompatActivity() {
 
     private fun setUpShareButton() {
         //TODO
+    }
+
+    private fun deleteProduct() {
+        val testDatabase = TestDatabase.getInstance(this.applicationContext)
+        val productDao = testDatabase.getProductDao()
+
+        Thread {
+            try {
+                product?.apply {
+                    productDao.deleteProduct(this)
+                    runOnUiThread {
+                        UiUtility.showToast(
+                            this@DetailViewActivity,
+                            "Product deleted successfully"
+                        )
+                        setResultWithFinish(RESULT_CODE_REFRESH)
+                    }
+                }
+            } catch (exception: Exception) {
+                exception.printStackTrace()
+                runOnUiThread {
+                    UiUtility.showToast(
+                        this@DetailViewActivity,
+                        "Cannot delete product."
+                    )
+                }
+            }
+        }.start()
+    }
+
+    private fun setResultWithFinish(resultCode: Int) {
+        setResult(resultCode)
+        finish()
     }
 }

@@ -10,7 +10,7 @@ import np.com.rishavchudal.ismt_sec_e.database.Product
 @Dao
 interface ProductDao {
     @Insert
-    fun insertNewProduct(product: Product)
+    fun insertNewProduct(product: Product): Long
 
     @Delete
     fun deleteProduct(product: Product)

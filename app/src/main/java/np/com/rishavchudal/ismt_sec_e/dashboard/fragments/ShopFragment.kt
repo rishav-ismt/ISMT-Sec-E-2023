@@ -34,7 +34,11 @@ class ShopFragment : Fragment(), ProductRecyclerAdapter.ProductAdapterListener {
     private val startDetailViewActivity = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) {
-        //TODO
+        if (it.resultCode == DetailViewActivity.RESULT_CODE_REFRESH) {
+            setUpRecyclerView()
+        } else {
+            //Do Nothing
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,7 +48,7 @@ class ShopFragment : Fragment(), ProductRecyclerAdapter.ProductAdapterListener {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         shopBinding = FragmentShopBinding.inflate(layoutInflater, container, false)
         setUpViews()
@@ -75,10 +79,9 @@ class ShopFragment : Fragment(), ProductRecyclerAdapter.ProductAdapterListener {
                     requireActivity().runOnUiThread {
                         UiUtility.showToast(requireActivity(), "No Items Added...")
                     }
-                } else {
-                    requireActivity().runOnUiThread {
-                        populateRecyclerView(products)
-                    }
+                }
+                requireActivity().runOnUiThread {
+                    populateRecyclerView(products)
                 }
             } catch (exception: Exception) {
                 exception.printStackTrace()
